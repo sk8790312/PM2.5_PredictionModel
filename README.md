@@ -14,59 +14,83 @@
 
 **数据含义：** AQICN 导出的 `pm25` 是 PM2.5 单项 AQI，不是 μg/m³ 浓度或整体 AQI。此次代码工作的目标名称据此记录；无需回头修改已经提交的 proposal。文件未提供足够站点及日汇总元数据，这些限制需在阶段汇报中说明。
 
-## 第一次运行：Google Colab
+## 第一次运行：Cursor／VS Code + Anaconda（Windows）
 
-新建 Colab 笔记本，逐个执行下列单元格。代码从 main 分支读取。
+Anaconda 管理 Python 环境；Cursor 或 VS Code 用来打开项目、阅读代码和查看结果。当前阶段使用普通 CPU 即可。
 
-```python
-!git clone --branch main https://github.com/sk8790312/PM2.5_PredictionModel.git
-%cd PM2.5_PredictionModel
-!pip install -r requirements.txt
-```
+### 1. 把 main 分支下载到电脑
 
-上传已整理好的 Excel（自己保留，不上传 GitHub）：
+打开本仓库的 main 分支，点击 **Code → Download ZIP**，解压到你自己选择的文件夹。后面所说的“项目目录”，是包含 `pipeline.py` 和 `requirements.txt` 的那一层文件夹。
 
-```python
-from google.colab import files
-uploaded = files.upload()
-```
-
-开始运行，文件名与实际上传的名字一致：
-
-```python
-!python pipeline.py --data "chengdu_20210701-20260701_sorted.xlsx"
-```
-
-查看结果：
-
-```python
-import json
-from IPython.display import display, Image
-with open('results/baselines/summary.json', encoding='utf-8') as f:
-    summary = json.load(f)
-print(summary['splits'])
-print(summary['validation_metrics'])
-display(Image(filename='results/baselines/data_overview.png'))
-display(Image(filename='results/baselines/validation_forecasts.png'))
-```
-
-Colab 运行结束前下载结果：
-
-```python
-import shutil
-shutil.make_archive('/content/pm25_results', 'zip', 'results/baselines')
-files.download('/content/pm25_results.zip')
-```
-
-## 在自己电脑运行
-
-使用 Python 3.10 或更高版本，在项目目录运行：
+如果电脑已经安装 Git，也可以在保存项目的位置打开终端执行：
 
 ```text
+git clone --branch main https://github.com/sk8790312/PM2.5_PredictionModel.git
+```
+
+### 2. 用 Anaconda 创建项目环境
+
+从 Windows 开始菜单打开 **Anaconda Prompt**，执行：
+
+```text
+conda create -n pm25 python=3.12 pip -y
+conda activate pm25
+```
+
+环境只需创建一次；以后使用时执行 `conda activate pm25` 即可。如果已经有名为 `pm25` 的环境，先确认它是本项目环境，不要重复创建。
+
+进入项目目录。将下面的示例路径替换成你实际解压或克隆的文件夹路径，并保留双引号：
+
+```text
+cd /d "D:\Projects\PM2.5_PredictionModel-main"
 python -m pip install -r requirements.txt
-python pipeline.py --data "你的Excel完整路径"
+python -c "import sys; print(sys.executable)"
+```
+
+最后一条会输出本环境的 Python 路径，下一步选择解释器时可以使用。上面的 `cd /d` 是 **Anaconda Prompt** 中的命令，不要直接复制到 PowerShell。
+
+### 3. 在 Cursor／VS Code 中打开项目
+
+1. 打开 Cursor 或 VS Code，选择 **File → Open Folder**，打开上一步的项目目录。
+2. 确认已安装并启用 Python 扩展。
+3. 按 **Ctrl+Shift+P**，搜索 **Python: Select Interpreter**，选择名为 `pm25` 的 Conda 环境。
+4. 如果列表里没有该环境，选择手动输入解释器路径，填写上一步输出的 Python 路径。
+
+解释器选择控制编辑器使用哪个 Python；终端也需要使用同一个环境。
+
+### 4. 放好本地 Excel 数据
+
+把自己保存的整理后 Excel 复制到项目的 `data` 文件夹中，文件名为：
+
+```text
+data/chengdu_20210701-20260701_sorted.xlsx
+```
+
+文件只保存在自己电脑上，无需在网页上传。`.gitignore` 已排除 Excel 数据文件。
+
+### 5. 运行当前阶段代码
+
+在 Cursor／VS Code 中选择 **Terminal → New Terminal**，确认终端位于项目目录，并激活环境：
+
+```text
+conda activate pm25
+python -c "import sys; print(sys.executable)"
+python pipeline.py --data "data/chengdu_20210701-20260701_sorted.xlsx"
+```
+
+确认 Python 路径属于 `pm25` 环境。如果编辑器终端提示找不到 `conda` 或无法激活，直接回到第 2 步已经激活环境、进入项目目录的 **Anaconda Prompt**，运行最后一条命令即可；仍然可以用 Cursor 阅读代码和查看结果。
+
+程序会在 `results/baselines/` 下生成数据检查、验证集指标和图片。可以在编辑器文件列表中打开 `summary.json`、`data_overview.png` 和 `validation_forecasts.png`。不需要 Colab 的上传、下载代码。
+
+### 6. 检查流程
+
+在同一个已激活环境的终端中执行：
+
+```text
 python -m unittest discover -s tests -v
 ```
+
+正常时四项检查通过。当前阶段仅运行数据处理和两个简单 baseline，测试集评价及 Transformer、LSTM 训练留待后续阶段。
 
 ## 输出分别说明什么
 
