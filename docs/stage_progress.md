@@ -28,9 +28,11 @@
 
 MAE、RMSE 单位为 AQI 指数点。该次验证结果中线性回归优于 persistence，尚不能推断 Transformer 或 LSTM 的表现。
 
-## 下一步
+## 下一步（仅计划，本阶段不执行）
 
 解释并复现这条流程，然后在相同样本和划分上加入小型 encoder-only Transformer 与 LSTM。使用验证集选择配置，最终测试留到方案确定后。不要把计划中的模型说成已经完成。
+
+拟采用 encoder-only Transformer 加回归头，因为任务是固定七天历史到一个数值的回归。Decoder-only 和 encoder-decoder 也能用于预测，但当前阶段不引入自回归生成或完整解码器的复杂度。具体效果需后续训练验证。
 
 ## 可用于汇报的准确措辞
 

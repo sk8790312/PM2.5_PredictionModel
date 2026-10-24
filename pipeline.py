@@ -75,7 +75,7 @@ def score(y, prediction):
             'R2': float(r2_score(y, prediction))}
 
 
-def run(data, output, evaluate_test=False):
+def run(data, output):
     daily = load_daily(data)
     samples = split_samples(make_samples(daily), daily.index)
     features = [f'lag_{lag}' for lag in range(LOOKBACK, 0, -1)]
@@ -106,7 +106,7 @@ def run(data, output, evaluate_test=False):
         'split_rule': '70/15/15 calendar periods, assigned by target date',
         'forecast_protocol': 'Rolling next-day forecasts using already observed history; model fitted once.',
         'splits': {}, 'validation_metrics': {},
-        'test_evaluated': bool(evaluate_test),
+        'test_evaluated': False,
         'runtime': {'python': platform.python_version(), 'pandas': pd.__version__,
                     'numpy': np.__version__, 'scikit-learn': sklearn.__version__},
     }
@@ -114,7 +114,7 @@ def run(data, output, evaluate_test=False):
         report['splits'][label] = {'samples': len(part),
             'first_target': str(part.index.min().date()),
             'last_target': str(part.index.max().date())}
-    for label in ['validation'] + (['test'] if evaluate_test else []):
+    for label in ['validation']:
         part = subsets[label]
         prediction = pd.DataFrame({'actual': part['target'],
             'persistence': part['lag_1'], 'linear_regression': model.predict(part[features])},
@@ -151,7 +151,5 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--data', required=True, help='Local AQICN .xlsx or .csv file')
     parser.add_argument('--output', default='results/baselines')
-    parser.add_argument('--evaluate-test', action='store_true',
-                        help='Use only once the experiment design is final; default reserves test set.')
     args = parser.parse_args()
-    run(args.data, args.output, args.evaluate_test)
+    run(args.data, args.output)

@@ -2,22 +2,24 @@
 
 成都 PM2.5 AQI 次日预测课程项目。当前代码阶段使用 2021-07-01 至 2026-07-01（含首尾）的历史数据，以过去连续七天预测次日。
 
+当前仓库仅覆盖本阶段的数据处理、简单 baseline 和初步验证。后续 Transformer、LSTM 训练及最终测试待下一阶段再推进。
+
 ## 当前阶段做什么
 
 1. 读取你自己的 Excel，检查日期、空值及重复记录。
 2. 补齐日历轴，以识别完全缺行的日期；不填补污染物数值。
 3. 构造连续七天输入和次日标签，跳过含缺失的窗口。
 4. 按目标日期分为训练、验证、测试三个时段（约 70% / 15% / 15%）。
-5. 训练线性回归，并与 persistence（明天等于今天）比较；默认只报告验证集成绩。
+5. 训练线性回归，并与 persistence（明天等于今天）比较；只报告验证集成绩。
 
 **数据含义：** AQICN 导出的 `pm25` 是 PM2.5 单项 AQI，不是 μg/m³ 浓度或整体 AQI。此次代码工作的目标名称据此记录；无需回头修改已经提交的 proposal。文件未提供足够站点及日汇总元数据，这些限制需在阶段汇报中说明。
 
 ## 第一次运行：Google Colab
 
-新建 Colab 笔记本，逐个执行下列单元格。若代码仍在草稿分支，需在 clone 时用 `--branch codex/stage-baseline-pipeline`。
+新建 Colab 笔记本，逐个执行下列单元格。代码从 main 分支读取。
 
 ```python
-!git clone --branch codex/stage-baseline-pipeline https://github.com/sk8790312/PM2.5_PredictionModel.git
+!git clone --branch main https://github.com/sk8790312/PM2.5_PredictionModel.git
 %cd PM2.5_PredictionModel
 !pip install -r requirements.txt
 ```
@@ -84,7 +86,7 @@ python -m unittest discover -s tests -v
 
 MAE/RMSE 单位为 AQI 指数点，R² 无单位。较低的 MAE/RMSE 通常更好，R² 越高通常更好，也可能为负。
 
-测试集数量可核查，但默认不计算测试集成绩。模型方案确定后才使用 `--evaluate-test`，不要为调参反复查看测试集结果。各次运行建议使用独立 `--output` 目录，避免混淆实验记录。
+本阶段仅核查测试集数量，不提供测试集评价入口；最终测试留待后续阶段。各次运行建议使用独立 `--output` 目录，避免混淆实验记录。
 
 ## 还未完成的工作
 
