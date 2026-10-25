@@ -14,9 +14,9 @@
 
 **数据含义：** AQICN 导出的 `pm25` 是 PM2.5 单项 AQI，不是 μg/m³ 浓度或整体 AQI。此次代码工作的目标名称据此记录；无需回头修改已经提交的 proposal。文件未提供足够站点及日汇总元数据，这些限制需在阶段汇报中说明。
 
-## 第一次运行：Cursor／VS Code + Anaconda（Windows）
+## 第一次运行：编辑器（如VS Code） + Anaconda（Windows）
 
-Anaconda 管理 Python 环境；Cursor 或 VS Code 用来打开项目、阅读代码和查看结果。当前阶段使用普通 CPU 即可。
+Anaconda 管理 Python 环境；编辑器 用来打开项目、阅读代码和查看结果。当前阶段使用普通 CPU 即可。
 
 ### 1. 把 main 分支下载到电脑
 
@@ -49,9 +49,9 @@ python -c "import sys; print(sys.executable)"
 
 最后一条会输出本环境的 Python 路径，下一步选择解释器时可以使用。上面的 `cd /d` 是 **Anaconda Prompt** 中的命令，不要直接复制到 PowerShell。
 
-### 3. 在 Cursor／VS Code 中打开项目
+### 3. 在 编辑器 中打开项目
 
-1. 打开 Cursor 或 VS Code，选择 **File → Open Folder**，打开上一步的项目目录。
+1. 打开，选择 **File → Open Folder**，打开上一步的项目目录。
 2. 确认已安装并启用 Python 扩展。
 3. 按 **Ctrl+Shift+P**，搜索 **Python: Select Interpreter**，选择名为 `pm25` 的 Conda 环境。
 4. 如果列表里没有该环境，选择手动输入解释器路径，填写上一步输出的 Python 路径。
@@ -70,7 +70,7 @@ data/chengdu_20210701-20260701_sorted.xlsx
 
 ### 5. 运行当前阶段代码
 
-在 Cursor／VS Code 中选择 **Terminal → New Terminal**，确认终端位于项目目录，并激活环境：
+在 编辑器 中选择 **Terminal → New Terminal**，确认终端位于项目目录，并激活环境：
 
 ```text
 conda activate pm25
@@ -78,9 +78,9 @@ python -c "import sys; print(sys.executable)"
 python pipeline.py --data "data/chengdu_20210701-20260701_sorted.xlsx"
 ```
 
-确认 Python 路径属于 `pm25` 环境。如果编辑器终端提示找不到 `conda` 或无法激活，直接回到第 2 步已经激活环境、进入项目目录的 **Anaconda Prompt**，运行最后一条命令即可；仍然可以用 Cursor 阅读代码和查看结果。
+确认 Python 路径属于 `pm25` 环境。如果编辑器终端提示找不到 `conda` 或无法激活，直接回到第 2 步已经激活环境、进入项目目录的 **Anaconda Prompt**，运行最后一条命令即可；仍然可以用 编辑器 阅读代码和查看结果。
 
-程序会在 `results/baselines/` 下生成数据检查、验证集指标和图片。可以在编辑器文件列表中打开 `summary.json`、`data_overview.png` 和 `validation_forecasts.png`。不需要 Colab 的上传、下载代码。
+程序会在 `results/baselines/` 下生成数据检查、验证集指标和图片。可以在编辑器文件列表中打开 `summary.json`、`data_overview.png` 和 `validation_forecasts.png`。
 
 ### 6. 检查流程
 
