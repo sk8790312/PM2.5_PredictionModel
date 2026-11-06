@@ -6,3 +6,8 @@ data/*
 !data/README.md
 *.xlsx
 *.csv
+
+~$*
+.~*
+*.tmp
+reports/*_Code.zip
