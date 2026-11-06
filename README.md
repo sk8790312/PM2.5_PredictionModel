@@ -114,7 +114,7 @@ MAE/RMSE 单位为 AQI 指数点，R² 无单位。较低的 MAE/RMSE 通常更�
 
 ## 还未完成的工作
 
-- 小型 encoder-only Transformer：数值投影、位置编码、1–2 个 Encoder 层和回归头。
+- 小型 Decoder-only Transformer + Regression Head。
 - 小型 LSTM，作为序列模型 baseline。
 - 依据验证集选择超参数，再进行最终测试及多次随机种子实验。
 - 如加入其他污染物，重新检查特征缺失，并使用相同评价日期比较。
